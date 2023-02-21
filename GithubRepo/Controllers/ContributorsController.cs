@@ -39,7 +39,7 @@ namespace GithubRepoAPI.Controllers
             if (response.ErrorCode == GithubRepoAPI.Response.ErrorCode.RateLimitExceeded)
             {
                 // Return a 403 if the request limit exceeded.
-                return BadRequest("Request rate limit excded.");
+                return BadRequest("Request rate limit exceeded.");
             }
 
             if (response.ErrorCode == GithubRepoAPI.Response.ErrorCode.UnknownError)
