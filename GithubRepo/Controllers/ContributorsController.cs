@@ -30,10 +30,22 @@ namespace GithubRepoAPI.Controllers
             };
 
             var response = await _mediator.Send(request);
-            if (response == null)
+            if (response.ErrorCode == GithubRepoAPI.Response.ErrorCode.NotFound)
             {
                 // Return a 404 if the supplied owner/repo is not valid
                 return NotFound("The requested owner or repository could not be found.");
+            }
+
+            if (response.ErrorCode == GithubRepoAPI.Response.ErrorCode.RateLimitExceeded)
+            {
+                // Return a 403 if the request limit exceeded.
+                return BadRequest("Request rate limit excded.");
+            }
+
+            if (response.ErrorCode == GithubRepoAPI.Response.ErrorCode.UnknownError)
+            {
+                // Return a 500 for other gitghub errors we don't expect.
+                return Problem("Git hub returned an unexpected error.");
             }
 
             // Acceptance criteria specifies only first 30 are required.

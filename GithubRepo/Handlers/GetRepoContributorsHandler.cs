@@ -16,11 +16,7 @@ namespace GithubRepoAPI.Handlers
         public async Task<RepoContributorsAPIResponse> Handle(GetRepoContributorsAPIRequest request, CancellationToken cancellationToken)
         {
             var response =  await _githubService.GetContributors(new GetContributorsRequest { Owner = request.Owner, Repo = request.Repo });
-            if (response == null)
-            {
-                return null;
-            }
-            return new RepoContributorsAPIResponse { Contributors = response.Contributors };
+            return new RepoContributorsAPIResponse { Contributors = response.Contributors, ErrorCode = (ErrorCode?)response.ErrorCode };
         }
     }
 }

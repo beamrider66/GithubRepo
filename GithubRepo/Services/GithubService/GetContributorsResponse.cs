@@ -2,6 +2,8 @@
 {
     public class GetContributorsResponse
     {
+        public GithubErrorCode? ErrorCode { get; set; }
+
         public GetContributorsResponse(IEnumerable<string> contributors)
         {
             Contributors = contributors;

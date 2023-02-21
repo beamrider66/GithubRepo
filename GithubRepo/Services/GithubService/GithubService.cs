@@ -16,7 +16,15 @@ namespace GithubRepoAPI.Services.GithubService
             }
             catch (Octokit.NotFoundException)
             {
-                return null;
+                return new GetContributorsResponse(null) { ErrorCode = GithubErrorCode.NotFound };
+            }
+            catch (Octokit.RateLimitExceededException)
+            {
+                return new GetContributorsResponse(null) { ErrorCode = GithubErrorCode.RateLimitExceeded};
+            }
+            catch (Exception e)
+            {
+                return new GetContributorsResponse(null) { ErrorCode = GithubErrorCode.UnknownError };
             }
         }
     }
