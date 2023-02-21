@@ -1,7 +1,10 @@
+using GithubRepoAPI.Services.GithubService;
+using MediatR;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
-namespace GithubRepo
+namespace GithubRepoAPI
 {
     public class Program
     {
@@ -29,6 +32,10 @@ namespace GithubRepo
                     new MediaTypeApiVersionReader("ver"));
             });
 
+            builder.Services.AddScoped<IGithubService, GithubService>();
+
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -41,7 +48,6 @@ namespace GithubRepo
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
