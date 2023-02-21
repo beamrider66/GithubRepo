@@ -49,7 +49,7 @@ namespace GithubRepoAPI.Controllers
             }
 
             // Acceptance criteria specifies only first 30 are required.
-            var results = response.Contributors.Take(30);
+            var results = response.Contributors;
 
             return Ok(results);
         }
