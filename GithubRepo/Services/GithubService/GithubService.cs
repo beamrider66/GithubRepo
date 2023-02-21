@@ -11,8 +11,12 @@ namespace GithubRepoAPI.Services.GithubService
             {
                 var client = new GitHubClient(new ProductHeaderValue("GithubService"));
                 var commits = await client.Repository.Commit.GetAll(request.Owner, request.Repo);
-                var result = commits.Select(c => c.Author.Login).Distinct().AsEnumerable();
-                return new GetContributorsResponse(result);
+                var commitAuthors = commits.Select(c => c.Commit).ToList();
+                var authorDetails = commitAuthors.Select(ca => AuthorFromCommit(ca))
+                    .Where(c => !String.IsNullOrEmpty(c))
+                    .Where(c => c != "GitHub")
+                    .Distinct();
+                return new GetContributorsResponse(authorDetails);
             }
             catch (Octokit.NotFoundException)
             {
@@ -26,6 +30,11 @@ namespace GithubRepoAPI.Services.GithubService
             {
                 return new GetContributorsResponse(null) { ErrorCode = GithubErrorCode.UnknownError };
             }
+        }
+
+        private string AuthorFromCommit(Commit commit)
+        {
+            return commit?.Committer?.Name;
         }
     }
 }
